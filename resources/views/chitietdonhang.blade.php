@@ -208,23 +208,15 @@
                             </svg>
                         </a>
                     </div>
-                    <div class="header__search">
-                        <div class="header__search-input-swap">
-                            <input type="text" class="header__search-input" placeholder="Tìm kiếm sản phẩm trong shop">
-                            <!-- search history -->
+                    <div class="header__search_detail">
 
-                        </div>
-
-                        <button class="header__search-btn">
-                            <i class=" header__search-btn-icon fa-solid fa-magnifying-glass"></i>
-                        </button>
                     </div>
 
                     @if($user != null)
                     <div class="header__cart">
                         <div class="header__cart-swap">
                             <i class=" header__cart-icon fa-sharp fas fa-cart-shopping"></i>
-                            <span class="header__cart-swap-notice">{{ $count }}</span>
+                            <span class="header__cart-swap-notice">{{ $countCart }}</span>
 
                             <div class="header__cart-list  ">
                                 <img src="./assets/img/no_cart.png" alt="no-cart-img" class=" header__cart-list-no-cart-img">
@@ -276,7 +268,7 @@
                     <div class="header__cart1">
                         <div class="header__cart-swap">
                             <i class=" header__cart-icon fa-solid fa-store fas fa-cart-shopping"></i>
-                            <span class="header__cart-swap-notice">{{ $count }}</span>
+                            <span class="header__cart-swap-notice">{{ $countOrder }}</span>
 
                             <div class="header__cart-list  ">
                                 <img src="./assets/img/no_cart.png" alt="no-cart-img" class=" header__cart-list-no-cart-img">
@@ -343,7 +335,6 @@
                             </figure>
 
                         </div>
-
                     </div>
 
                     <div class="product-content">
@@ -383,30 +374,43 @@
                         </div>
 
                         <div class="btn-group">
-
                             <div class="counter-wrapper">
-
                                 <button class="counter-btn" id="data-qty-minus">
                                     <ion-icon name="remove-outline"></ion-icon>
                                 </button>
-
                                 <span class="span" id="data-qty">1</span>
-
                                 <button class="counter-btn" id="data-qty-plus">
                                     <ion-icon name="add-outline"></ion-icon>
                                 </button>
+                            </div>
+                            <div id="addToCartForm">
+
+                                <form action="{{ route('addCartHandle') }}" method="get">
+                                    <input type="hidden" name="id_item" id="id_item" value="{{ $item->id }}" />
+                                    <input type="hidden" name="sl" id="slInput" value=1 />
+                                    <button type="submit" class="cart-btn">
+                                        <ion-icon name="bag-handle-outline" aria-hidden="true"></ion-icon>
+                                        <span class="span">Giỏ hàng</span>
+                                    </button>
+                                </form>
+                                <form action="{{ route('addOrderHandle') }}" method="get">
+                                    <input type="hidden" name="id_item" id="id_item" value="{{ $item->id }}" />
+                                    <input type="hidden" name="sl" id="slInput1" value=1 />
+                                    <input type="hidden" name="percent" value="{{ $item->sale }}" />
+                                    <input type="hidden" name="cost" value="{{ $item->cost }}" />
+                                    <button type="submit" class="cart-btn">
+                                        <ion-icon name="storefront-outline" aria-hidden="true"></ion-icon>
+                                        <span class="span">Mua hàng</span>
+                                    </button>
+                                </form>
+
+
 
                             </div>
-                            <form id="addToCartForm" action="{{ route('addCartHandle') }}" method="get">
-                                <input type="hidden" name="id_item" value="{{ $item->id }}" />
-                                <input type="hidden" name="sl" id="slInput" value=1 />
-                                <button type="submit" class="cart-btn">
-                                    <ion-icon name="bag-handle-outline" aria-hidden="true"></ion-icon>
-                                    <span class="span">Add to cart</span>
-                                </button>
-                            </form>
+
 
                         </div>
+
 
                     </div>
 
@@ -433,7 +437,11 @@
         /**
          * product quantity functionality
          */
+
         const qtyInput = document.getElementById('slInput');
+        const qtyInput1 = document.getElementById('slInput1');
+
+
         const totalPriceElem = document.getElementById("data-total-price");
         const totalOld = document.getElementById("data-qty-old");
         const qtyElem = document.getElementById("data-qty");
@@ -451,6 +459,7 @@
 
         const increaseProductQty = function() {
             qty++;
+
             totalPrice = qty * productPrice;
 
             qtyElem.textContent = qty;
@@ -460,6 +469,7 @@
 
 
             qtyInput.value = qty;
+            qtyInput1.value = qty;
 
             var old = qty * itemData.cost;
             const formattedOld = old.toLocaleString('vi-VN');
@@ -470,6 +480,7 @@
 
         const decreaseProductQty = function() {
             if (qty > 1) qty--;
+
             totalPrice = qty * productPrice;
 
             qtyElem.textContent = qty;
@@ -477,6 +488,7 @@
             totalPriceElem.textContent = `${formattedPrice} đ`;
 
             qtyInput.value = qty;
+            qtyInput1.value = qty;
 
             var old = qty * itemData.cost;
             const formattedOld = old.toLocaleString('vi-VN');

@@ -14,11 +14,16 @@ class ItemDetailController extends Controller
     public function showItemDetail($id_item)
     {
         $user = Auth::user();
+        $item = ItemModel::find($id_item);
         if ($user != null) {
             $itemCarts = User::find($user->id)->items()->get();
-            $count = $itemCarts->count();
+            $countCart = $itemCarts->count();
+            $itemOrder = User::find($user->id)->order()->get();
+            $countOrder = $itemOrder->count();
+        } else {
+            return view('chitietdonhang', compact(['item', 'user']));
         }
-        $item = ItemModel::find($id_item);
-        return view('chitietdonhang', compact(['item', 'user', 'count', 'itemCarts']));
+
+        return view('chitietdonhang', compact(['item', 'user', 'countCart', 'itemCarts', 'itemOrder', 'countOrder']));
     }
 }

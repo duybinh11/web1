@@ -15,8 +15,14 @@ class LoginController extends Controller
         $username = $request->username;
         $address = $request->address;
         $phone = $request->phone;
-
-        $check = User::insert(
+        $request->validate([
+            'email' => 'required|email',
+            'pass' => 'required',
+            'username' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+        ]);
+        User::insert(
             [
                 'email' => $email,
                 'password' => $pass,
